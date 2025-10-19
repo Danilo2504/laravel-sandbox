@@ -1,0 +1,36 @@
+/* Required asterisk */
+.required-asterisk{
+   color: #fa8a02;
+   font-size: 16px;
+   vertical-align: top;
+   margin-left: 2px;
+}
+
+/* Password Toggler */
+.password-component-container{
+   position: relative;
+   width: 100%;
+}
+
+.password-component-container input[type="password"],
+.password-component-container input[type="type"]{
+   width: 100%;
+   display: block;
+   padding-right: 40px !important;
+   box-sizing: border-box;
+}
+
+.toggle-password{
+   position: absolute;
+   top: 50%;
+   right: 10px;
+   transform: translateY(-50%);
+   cursor: pointer;
+   z-index: 10;
+   color: #888;
+   transition: color .2 ease-in-out;
+}
+
+.fa-eye-slash {
+   color: #09f;
+}
