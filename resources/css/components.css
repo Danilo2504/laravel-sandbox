@@ -28,7 +28,7 @@
    cursor: pointer;
    z-index: 10;
    color: #888;
-   transition: color .2 ease-in-out;
+   transition: color .2s ease-in-out;
 }
 
 .fa-eye-slash {

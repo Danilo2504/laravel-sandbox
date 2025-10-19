@@ -60,5 +60,5 @@
                 'value' => ($value)
             ])}}>
     @endswitch
-    {{$helperText}}
+    {{$helperText ?? ''}}
 </div>

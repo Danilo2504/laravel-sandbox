@@ -23,7 +23,7 @@ class Input extends Component
             throw new \InvalidArgumentException('El parámetro "type" es requerido');
         }
 
-        $this->id = $id ?? $name;
+        $this->id = empty($id) ? $name : $id;
         $this->name = $name;
         $this->type = $type;
     }
