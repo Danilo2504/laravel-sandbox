@@ -26,21 +26,7 @@
                     ])}}
                 >
                 <i class="fas fa-eye toggle-password" data-toggle="#{{$id}}"></i>
-
-                {{-- Agregar campos de "Recordar contrasena" y "Olvidaste tu contrasena" --}}
             </div>
-            @break
-        @case('checkbox')
-            {{-- Checkbox --}}
-            @break
-        @case('textarea')
-            <textarea {{$attributes->merge([
-                'class' => 'textarea-component',
-                'name' => $name,
-                'id' => $id,
-                'value' => $value,
-                'rows' => 4
-            ])}}></textarea>
             @break
         @case('hidden')
             <input
@@ -51,6 +37,7 @@
                     'value' => $value
                 ])}}
             >
+            @break
         @default
             <input {{$attributes->merge([
                 'class'=> 'input-component',

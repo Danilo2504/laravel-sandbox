@@ -8,6 +8,7 @@ use Illuminate\View\Component;
 
 class Input extends Component
 {
+    protected $allowedInputs = ['text', 'email', 'password', 'number', 'hidden', 'tel'];
     public $id;
     public $name;
     public $type;
@@ -21,6 +22,9 @@ class Input extends Component
         }
         if(empty($type)){
             throw new \InvalidArgumentException('El parámetro "type" es requerido');
+        }
+        if(!in_array($type, $this->allowedInputs)){
+            throw new \InvalidArgumentException('El parámetro "type" debe ser uno de los siguientes valores: ' . implode(', ', $this->allowedInputs));
         }
 
         $this->id = empty($id) ? $name : $id;
