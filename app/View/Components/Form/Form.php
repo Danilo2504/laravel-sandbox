@@ -11,14 +11,31 @@ class Form extends Component
     private $simulatedMethods = ['PUT', 'PATCH', 'DELETE'];
     public $method;
     public $transformedMethod;
+    public $model;
 
     /**
      * Create a new component instance.
      */
-    public function __construct($method = "")
+    public function __construct($method = "", $model = null)
     {
         if(empty($method)){
             throw new \InvalidArgumentException('El parámetro "method" es requerido');
+        }
+        
+        if($model){
+            if(
+                $model instanceof \Illuminate\Database\Eloquent\Model ||
+                $model instanceof \Illuminate\Support\Collection
+            ){
+                $this->model = $model;
+            } elseif(
+                is_array($model) ||
+                is_object($model)
+            ){
+                $this->model = collect($model);
+            } else{
+                throw new \InvalidArgumentException('El parámetro "model" debe ser de tipo \Illuminate\Database\Eloquent\Model o \Illuminate\Support\Collection o array() o object');
+            }
         }
 
         $this->method = $method;

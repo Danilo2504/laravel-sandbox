@@ -20,8 +20,16 @@ class Select extends Component
         if(empty($name)){
             throw new \InvalidArgumentException('El parámetro "name" es requerido');
         }
-        if(!is_array($options) || $options instanceof \Illuminate\Support\Collection){
-            throw new \InvalidArgumentException('El parámetro "options" deber ser un array o una instancia de \Illuminate\Support\Collection');
+        
+        if(
+            !(
+                $options instanceof \Illuminate\Database\Eloquent\Model ||
+                $options instanceof \Illuminate\Support\Collection ||
+                is_array($options) ||
+                is_object($options)
+            )
+        ){
+            throw new \InvalidArgumentException('El parámetro "options" debe ser de tipo \Illuminate\Database\Eloquent\Model o \Illuminate\Support\Collection o array() o object');
         }
 
         $this->options = collect();

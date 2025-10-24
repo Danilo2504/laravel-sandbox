@@ -1,13 +1,14 @@
+@aware(['model'])
 @props(['noLabel' => false, 'label' => '', 'value' => '', 'cssClasses' => '', 'required' => false])
 
 <div @class(['input-component-container', $cssClasses])>
     @unless ($noLabel)
         @empty($customLabel)
-            <label class="label-component" for="{{$id}}">{{$label}}</label>
-
-            @if ($required)
-                <span class="required-asterisk">*</span>
-            @endif
+            <label class="label-component" for="{{$id}}">{{$label}}
+                @if ($required)
+                    <span class="required-asterisk">*</span>
+                @endif
+            </label>
         @else
             {{$customLabel ?? ''}}
         @endempty
@@ -22,7 +23,7 @@
                         'class' => 'password-component',
                         'name' => $name,
                         'id' => $id,
-                        'value' => $value,
+                        'value' => $model[$name] ?? $value ?? '',
                     ])}}
                 >
                 <i class="fas fa-eye toggle-password" data-toggle="#{{$id}}"></i>
@@ -34,7 +35,7 @@
                 {{$attributes->merge([
                     'name' => $name,
                     'id' => $id,
-                    'value' => $value
+                    'value' => $model[$name] ?? $value ?? ''
                 ])}}
             >
             @break
@@ -43,8 +44,8 @@
                 'class'=> 'input-component',
                 'type' => $type,
                 'name' => $name,
-                'id' => ($id),
-                'value' => ($value)
+                'id' => $id,
+                'value' => $model[$name] ?? $value ?? ''
             ])}}>
     @endswitch
     {{$helperText ?? ''}}

@@ -1,4 +1,4 @@
-@props(['type' => 'login'])
+@props(['operationType' => ''])
 
 <form
     {{$attributes->merge([
@@ -10,8 +10,10 @@
     @if ($needsSimulation)
         @method($method)
     @endif
-    @if (!empty($type))
-        <input type="hidden" name="operation_type" value="{{$type}}">
+    @if (!empty($operationType))
+        <input type="hidden" name="operation_type" value="{{$operationType}}">
     @endif
+    {{$alerts ?? ''}}
     {{$slot}}
+    {{$actions ?? ''}}
 </form>
