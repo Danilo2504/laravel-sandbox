@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Form;
+namespace App\View\Components;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -30,6 +30,6 @@ class Button extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.form.button');
+        return view('components.button');
     }
 }

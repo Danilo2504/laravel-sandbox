@@ -1,5 +1,4 @@
-@aware(['model'])
-@props(['noLabel' => false, 'label' => '', 'required' => false, 'placeholder' => '- Select -', 'cssClasses' => '', 'value' => ''])
+@props(['noLabel' => false, 'label' => '', 'value' => '', 'required' => false, 'placeholder' => '- Select -', 'cssClasses' => ''])
 
 <div @class(['select-component-container', $cssClasses])>
     @unless ($noLabel)
@@ -9,19 +8,18 @@
                     <span class="required-asterisk">*</span>
                 @endif
             </label>
-
         @else
             {{$customLabel ?? ''}}
         @endempty
     @endunless
     <select name="{{$name}}" id="{{$id}}" {{$attributes->merge(['class' => 'select-component'])}}>
         <option value="">{{$placeholder}}</option>
-        @unless (empty($customOptions))
+        @empty ($customOptions)
             @foreach ($options as $option)
-                <option value="{{$option->value}}" @selected((($model[$name] ?? '') === $value) || ($option->value === $value)) id="{{$option->id}}">{{$option->label}}</option>
+                <option value="{{$option['value']}}" @selected($option['value'] === $value) id="{{$option['id']}}">{{$option['label']}}</option>
             @endforeach
         @else
             {{$customOptions ?? ''}}
-        @endunless
+        @endempty
     </select>
 </div>

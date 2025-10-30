@@ -2,34 +2,18 @@
 
 namespace App\View\Components\Form;
 
+use App\View\Components\Base\BaseComponent;
 use Closure;
 use Illuminate\Contracts\View\View;
-use Illuminate\View\Component;
 
-class Input extends Component
+class Input extends BaseComponent
 {
-    protected $allowedInputs = ['text', 'email', 'password', 'number', 'hidden', 'tel'];
-    public $id;
-    public $name;
-    public $type;
     /**
-     * Create a new component instance.
+     * Inicialización personalizada para Input
      */
-    public function __construct($id = '', $name = '', $type = '')
+    protected function afterInitialize(array $params): array
     {
-        if(empty($name)){
-            throw new \InvalidArgumentException('El parámetro "name" es requerido');
-        }
-        if(empty($type)){
-            throw new \InvalidArgumentException('El parámetro "type" es requerido');
-        }
-        if(!in_array($type, $this->allowedInputs)){
-            throw new \InvalidArgumentException('El parámetro "type" debe ser uno de los siguientes valores: ' . implode(', ', $this->allowedInputs));
-        }
-
-        $this->id = empty($id) ? $name : $id;
-        $this->name = $name;
-        $this->type = $type;
+        return ['allowedTypes' => ['text', 'email', 'password', 'number', 'hidden', 'tel']];
     }
 
     /**

@@ -1,6 +1,3 @@
-@aware(['model'])
-@props(['noLabel' => false, 'label' => '', 'value' => '', 'cssClasses' => '', 'required' => false])
-
 <div @class(['input-component-container', $cssClasses])>
     @unless ($noLabel)
         @empty($customLabel)
@@ -23,7 +20,7 @@
                         'class' => 'password-component',
                         'name' => $name,
                         'id' => $id,
-                        'value' => $model[$name] ?? $value ?? '',
+                        'value' => $value ?? '',
                     ])}}
                 >
                 <i class="fas fa-eye toggle-password" data-toggle="#{{$id}}"></i>
@@ -35,7 +32,7 @@
                 {{$attributes->merge([
                     'name' => $name,
                     'id' => $id,
-                    'value' => $model[$name] ?? $value ?? ''
+                    'value' => $value ?? ''
                 ])}}
             >
             @break
@@ -45,7 +42,7 @@
                 'type' => $type,
                 'name' => $name,
                 'id' => $id,
-                'value' => $model[$name] ?? $value ?? ''
+                'value' => $value ?? ''
             ])}}>
     @endswitch
     {{$helperText ?? ''}}
