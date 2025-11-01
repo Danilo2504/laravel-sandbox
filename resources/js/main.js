@@ -1,40 +1,41 @@
-// Restricts input for the set of matched elements to the given inputFilter function.
-(function($) {
-   $.fn.onlyNumbers = function(){
-      return this.on("input keydown keyup mousedown mouseup select contextmenu drop focusout", function(e) {
-         const hasNumbers = /^\d*$/.test(this.value);
+import { CommonAdapter, OnlyNumbers, PasswordToggler } from "./Stardust/Adapters";
+import { StardustOrchestrator } from "./Stardust/Orchestrator";
+import "./plugins.js";
 
-         if (hasNumbers) {
-            this.oldValue = this.value;
-         } else if(this.hasOwnProperty("oldValue")){
-            this.value = this.oldValue;
-         } else {
-            this.value = "";
-         }
-      });
+window.Stardust = new StardustOrchestrator();
+
+Stardust.registerAdapter('onlyNumbers', OnlyNumbers);
+Stardust.registerAdapter('passwordToggler', PasswordToggler);
+Stardust.registerAdapter('commonAdapter', CommonAdapter);
+
+Stardust.register({
+   name: 'passwordToggler',  // ← Hace referencia al adapter
+   element: '[data-toggle]'
+});
+
+Stardust.register({
+   name: 'onlyNumbers',  // ← Hace referencia al adapter
+   element: '[data-onlynumbers]'
+});
+
+Stardust.register({
+   name: 'editorHtml',
+   element: '[data-editor-html]',
+   onInit: function(el, opts){
+      const options = $(el).data('editor-html');
+      $(el).editorHtml(options);
    }
-}(jQuery));
+});
 
-function initTelephoneInput(){
-   $('input[type="tel"].input-component').onlyNumbers();
-}
-
-function initPasswordToggler(){
-   $('.toggle-password').on('mousedown touchstart', function(){
-      const $this = $(this);
-      const $inputTarget = $($this.data('toggle'));
-      $inputTarget.attr('type', 'text');
-      $this.removeClass('fa-eye').addClass('fa-eye-slash');
-   });
-   $('.toggle-password').on('mouseup touchend', function(){
-      const $this = $(this);
-      const $inputTarget = $($this.data('toggle'));
-      $inputTarget.attr('type', 'password');
-      $this.removeClass('fa-eye-slash').addClass('fa-eye');
-   });
-}
+Stardust.register({
+   name: 'commonAdapter',
+   element: '[data-onlynumbers]',
+   onInit: function(el, options){
+      console.log('Element inline', el);
+   }
+});
 
 $(function(){
-   initPasswordToggler();
-   initTelephoneInput();
-});
+   Stardust.initAll();
+   console.log(Stardust.getAll());
+})

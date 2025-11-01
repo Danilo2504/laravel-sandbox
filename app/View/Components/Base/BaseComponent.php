@@ -60,7 +60,7 @@ abstract class BaseComponent extends Component
       $this->name = $name;
 
       // ID (default: name)
-      $this->id = Arr::get($params, 'id', $name);
+      $this->id = trim(Arr::get($params, 'id', '') !== '') ? Arr::get($params, 'id', '') : $name;
 
       // Type
       $this->type = Arr::get($params, 'type', '');
@@ -135,7 +135,7 @@ abstract class BaseComponent extends Component
       if(!$this->model){
          return null;
       }
-      
+
       return $key ? $this->model->get($key) : $this->model;
    }
 

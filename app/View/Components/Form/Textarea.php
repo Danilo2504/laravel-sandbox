@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 class Textarea extends BaseComponent
 {
     public $allowedTypes;
+    public $editorOptions;
     /**
      * Inicialización personalizada para Textarea
      */
@@ -21,6 +22,7 @@ class Textarea extends BaseComponent
         string|array $cssClasses = [],
         string $value = '',
         bool $required = false,
+        array $editorOptions = []
     )
     {
         parent::__construct(
@@ -39,6 +41,9 @@ class Textarea extends BaseComponent
         if (!in_array($this->type, $this->allowedTypes)) {
             throw new \InvalidArgumentException('El parámetro "type" debe estar entre los siguientes: ' . implode(', ', $this->allowedTypes));
         }
+    
+        $this->editorOptions = $editorOptions;
+
     }
 
     /**

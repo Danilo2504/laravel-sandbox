@@ -1,11 +1,7 @@
 <div @class(['select-component-container', $cssClasses])>
     @unless ($noLabel)
         @empty($customLabel)
-            <label class="label-component" for="{{$id}}">{{$label}}
-                @if ($required)
-                    <span class="required-asterisk">*</span>
-                @endif
-            </label>
+            <x-label id="{{$id}}" required="{{$required}}" label="{{$label}}"></x-label>
         @else
             {{$customLabel ?? ''}}
         @endempty

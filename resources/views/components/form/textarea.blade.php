@@ -3,14 +3,24 @@
 <div @class(['textarea-component-container', $cssClasses])>
     @unless ($noLabel)
         @empty($customLabel)
-            <label class="label-component" for="{{$id}}">{{$label}}
-                @if ($required)
-                    <span class="required-asterisk">*</span>
-                @endif
-            </label>
+            <x-label id="{{$id}}" required="{{$required}}" label="{{$label}}"></x-label>
         @else
             {{$customLabel ?? ''}}
         @endempty
     @endunless
-    <textarea name="{{$name}}" id="{{$id}}" {{$attributes->class(['textarea-component'])->merge(['rows' => 5, 'cols' => 30])}} :value="$model[$name]"></textarea>
+    <textarea
+        name="{{$name}}"
+        id="{{$id}}"
+        @if ($type === 'editor')
+            data-editor-html='@json($editorOptions)'
+        @endif
+        {{$attributes
+            ->class(['textarea-component'])
+            ->merge([
+                'rows' => 5,
+                'cols' => 30
+            ])
+        }}
+        :value="$model[$name]"
+    ></textarea>
 </div>
