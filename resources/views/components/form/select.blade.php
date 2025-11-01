@@ -1,5 +1,3 @@
-@props(['noLabel' => false, 'label' => '', 'value' => '', 'required' => false, 'placeholder' => '- Select -', 'cssClasses' => ''])
-
 <div @class(['select-component-container', $cssClasses])>
     @unless ($noLabel)
         @empty($customLabel)
@@ -16,7 +14,7 @@
         <option value="">{{$placeholder}}</option>
         @empty ($customOptions)
             @foreach ($options as $option)
-                <option value="{{$option['value']}}" @selected($option['value'] === $value) id="{{$option['id']}}">{{$option['label']}}</option>
+                <option value="{{$option->value}}" @selected($option->value === $value) id="{{$option->id}}">{{$option->label}}</option>
             @endforeach
         @else
             {{$customOptions ?? ''}}

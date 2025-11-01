@@ -2,32 +2,27 @@
 
 namespace App\View\Components\Base;
 
-use Closure;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\View\Component;
-use ReflectionClass;
 
 abstract class BaseComponent extends Component
 {
    // Propiedades base
    public $name;
    public $id;
-   public $value;
+   public $type;
    public $label;
    public $noLabel;
+   public $value;
+   public $cssClasses;
    public $required;
    public $disabled;
    public $readonly;
-   public $cssClasses;
-   public $type;
-   public $allowedTypes;
-   public $options;
+   public $placeholder;
+
    protected $model;
-   protected $extraParams;
    protected $field;
 
    /**
@@ -37,39 +32,19 @@ abstract class BaseComponent extends Component
    public function __construct(
       $name = '',
       $id = '',
-      $value = '',
+      $type = '',
       $label = '',
       $noLabel = false,
+      $value = '',
+      $cssClasses = [],
+      $readonly = false,
       $required = false,
       $disabled = false,
-      $readonly = false,
-      $cssClasses = null,
-      $type = null,
-      $allowedTypes = null,
-      $options = null
+      $placeholder = ''
    )
    {  
-      // Crear array con todos los parámetros
-      $params = compact(
-         'name', 'id', 'value', 'label', 'noLabel',
-         'required', 'disabled', 'readonly', 'cssClasses',
-         'type', 'allowedTypes', 'options'
-      );
-
-      // Inicializar propiedades base
-      $this->initializeBaseProperties($params);
-      $field = new ReflectionClass($this);
-      $this->field = $field->name;
-   }
-
-   /**
-    * Método para inicialización personalizada en clases hijas
-    * Las clases hijas pueden sobrescribir este método para agregar lógica adicional
-    */
-   protected function afterInitialize(array $params): array
-   {
-      // Las clases hijas pueden sobrescribir este método
-      return [];
+      $baseParameters = compact('name', 'id', 'type', 'label', 'noLabel', 'value', 'cssClasses', 'readonly', 'required', 'disabled', 'placeholder');
+      $this->initializeBaseProperties($baseParameters);
    }
 
    /**
@@ -85,10 +60,25 @@ abstract class BaseComponent extends Component
       $this->name = $name;
 
       // ID (default: name)
-      $this->id = Arr::get($params, 'id', '') ?: $name;
+      $this->id = Arr::get($params, 'id', $name);
+
+      // Type
+      $this->type = Arr::get($params, 'type', '');
 
       // Value
       $this->value = Arr::get($params, 'value', '');
+
+      // Required
+      $this->required = Arr::get($params, 'required', false);
+
+      // Disabled
+      $this->disabled = Arr::get($params, 'disabled', false);
+
+      // Readonly
+      $this->readonly = Arr::get($params, 'readonly', false);
+
+      // Placeholder
+      $this->placeholder = Arr::get($params, 'placeholder', '');
 
       // Label
       $this->noLabel = Arr::get($params, 'noLabel', false);
@@ -102,11 +92,6 @@ abstract class BaseComponent extends Component
          $this->label = Arr::get($params, 'label', '');
       }
 
-      // Atributos de estado
-      $this->required = Arr::get($params, 'required', false);
-      $this->disabled = Arr::get($params, 'disabled', false);
-      $this->readonly = Arr::get($params, 'readonly', false);
-
       // CSS Classes
       $cssClasses = Arr::get($params, 'cssClasses');
       if ($cssClasses) {
@@ -118,64 +103,6 @@ abstract class BaseComponent extends Component
             throw new \InvalidArgumentException('El parámetro "cssClasses" debe ser de tipo array o string');
          }
       }
-
-      // Type y AllowedTypes
-      $allowedTypes = Arr::get($params, 'allowedTypes');
-      if ($allowedTypes) {
-         if (!is_array($allowedTypes) || count($allowedTypes) === 0) {
-            throw new \InvalidArgumentException('El parámetro "allowedTypes" debe ser un array no vacío');
-         }
-         $this->allowedTypes = $allowedTypes;
-
-         $type = Arr::get($params, 'type', '');
-         if (trim($type) !== '' && in_array($type, $allowedTypes)) {
-            $this->type = $type;
-         } elseif (trim($type) !== '') {
-            throw new \InvalidArgumentException('El parámetro "type" debe estar entre los siguientes: ' . implode(', ', $allowedTypes));
-         }
-      } else {
-         $this->type = Arr::get($params, 'type');
-      }
-
-      // Options
-      $options = Arr::get($params, 'options');
-      if ($options) {
-         $this->options = $this->prepareOptions($options);
-      }
-   }
-
-   /**
-    * Preparar opciones para componentes tipo select
-    */
-   protected function prepareOptions($options): Collection
-   {
-      if ($options instanceof Model || $options instanceof Collection) {
-         $options = $options->toArray();
-      } elseif (is_object($options)) {
-         $options = (array) $options;
-      }
-
-      if (!is_array($options)) {
-         throw new \InvalidArgumentException(
-            'El parámetro "options" debe ser de tipo Model, Collection, array u objeto'
-         );
-      }
-
-      $response = collect();
-      foreach ($options as $option) {
-         if (!is_array($option) || !array_key_exists('value', $option) || !array_key_exists('label', $option)) {
-            throw new \InvalidArgumentException(
-               'Cada opción en "options" debe ser un array con las claves "value" y "label"'
-            );
-         }
-         $response->push([
-            'value' => $option['value'],
-            'label' => $option['label'],
-            'id' => uniqid('option_')
-         ]);
-      }
-
-      return $response;
    }
 
    // Getters
@@ -189,14 +116,27 @@ abstract class BaseComponent extends Component
       return $this->id;
    }
 
+   public function getType(){
+      return $this->type;
+   }
+   
    public function getValue()
    {
       return $this->value;
    }
 
-   protected function getModel()
+   public function getLabel()
    {
-      return $this->model;
+      return $this->label;   
+   }
+
+   protected function getModel(?string $key = null)
+   {
+      if(!$this->model){
+         return null;
+      }
+      
+      return $key ? $this->model->get($key) : $this->model;
    }
 
    protected function setModel($model)
@@ -205,6 +145,7 @@ abstract class BaseComponent extends Component
          if ($model instanceof Model || $model instanceof Collection) {
             $this->model = $model;
          } elseif (is_array($model) || is_object($model)) {
+            $model = (object) $model;
             $this->model = collect($model);
          } else {
             throw new \InvalidArgumentException(
@@ -213,45 +154,10 @@ abstract class BaseComponent extends Component
          }
       }
 
+      if($this->model->get($this->name)){
+         $this->value = $this->model->get($this->name);
+      }
+
       return $this->model;
    }
-
-   public function resolveView()
-   {
-      $view = $this->render();
-
-      if ($view instanceof ViewContract) {
-         return $view;
-      }
-
-      if ($view instanceof Htmlable) {
-         return $view;
-      }
-
-      $resolver = function ($view) {
-         if ($view instanceof ViewContract) {
-            return $view;
-         }
-
-         return $this->extractBladeViewFromString($view);
-      };
-
-      return $view instanceof Closure ?
-         function (array $data = []) use ($view, $resolver) {
-            $extractAttrs = json_decode(json_encode($data['attributes']), true);
-            $newParams = $this->afterInitialize($extractAttrs);
-
-            foreach($newParams as $key => $newParam){
-               if(isset($this[$key])){
-                  $this[$key] = $newParam;
-                  unset($newParams[$key]);
-               }
-            }
-
-            $this->extraParams = $newParams;
-
-            return $resolver($view($data));
-         } :
-         $resolver($view);
-    }
 }
