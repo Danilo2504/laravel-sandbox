@@ -1,4 +1,8 @@
 (function ($) {
+   // === Helper: Namespace ===
+   $.fn.ns = function (NS, events) {
+      return events.split(/\s+/).map(e => `${e}.${NS}`).join(' ');
+   };
    // === Plugin: OnlyNumbers ===
    $.fn.onlyNumbers = function () {
       return this.each(function () {

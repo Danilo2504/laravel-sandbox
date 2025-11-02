@@ -1,41 +1,37 @@
-import { CommonAdapter, OnlyNumbers, PasswordToggler } from "./Stardust/Adapters";
-import { StardustOrchestrator } from "./Stardust/Orchestrator";
 import "./plugins.js";
+import Stardust from "./setup";
 
-window.Stardust = new StardustOrchestrator();
-
-Stardust.registerAdapter('onlyNumbers', OnlyNumbers);
-Stardust.registerAdapter('passwordToggler', PasswordToggler);
-Stardust.registerAdapter('commonAdapter', CommonAdapter);
+window.Stardust = Stardust;
 
 Stardust.register({
    name: 'passwordToggler',  // ← Hace referencia al adapter
-   element: '[data-toggle]'
+   element: '[data-toggle]',
 });
 
 Stardust.register({
-   name: 'onlyNumbers',  // ← Hace referencia al adapter
-   element: '[data-onlynumbers]'
+   name: 'numbersOnly',  // ← Hace referencia al adapter
+   element: '[data-numbersonly]'
 });
 
 Stardust.register({
    name: 'editorHtml',
    element: '[data-editor-html]',
-   onInit: function(el, opts){
-      const options = $(el).data('editor-html');
-      $(el).editorHtml(options);
-   }
-});
-
-Stardust.register({
-   name: 'commonAdapter',
-   element: '[data-onlynumbers]',
-   onInit: function(el, options){
-      console.log('Element inline', el);
+   options: {
+      minHeight: 300,
+      maxHeight: 800,
+      toolbar: [
+         ['style', ['bold', 'italic', 'underline', 'clear']],
+         ['font', ['strikethrough', 'superscript', 'subscript']],
+         ['fontname', ['fontname']],
+         ['fontsize', ['fontsize']],
+         ['color', ['color']],
+         ['para', ['ul', 'ol', 'paragraph']],
+         ['insert', ['picture', 'link', 'video', 'table']],
+         ['misc', ['codeview', 'fullscreen', 'undo', 'redo']]
+      ]
    }
 });
 
 $(function(){
    Stardust.initAll();
-   console.log(Stardust.getAll());
 })

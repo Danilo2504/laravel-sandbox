@@ -13,5 +13,5 @@
 
    @include('base.footer')
    @include('base.scripts')
-   @stack('script')
+   @stack('scripts')
 </html>
