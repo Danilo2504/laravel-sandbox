@@ -1,9 +1,9 @@
-@props(['required' => false, 'id' => '', 'label' => ''])
+@props(['required' => false, 'id' => '', 'label' => '', 'cssClasses' => ''])
 
-<div class="label-component-container">
-   <label class="label-component" for="{{$id}}">{{$label}}
+{{-- <div class="label-component-container"> --}}
+   <label {{$attributes->class(['form-label'])}} for="{{$id}}">{{$label}}
       @if ($required)
          <span class="required-asterisk">*</span>
       @endif
    </label>
-</div>
+{{-- </div> --}}

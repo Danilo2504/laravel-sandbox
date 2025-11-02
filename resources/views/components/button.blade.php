@@ -5,7 +5,7 @@
       href="{{$url}}"
       role="button"
       {{$attributes->class([
-         'button-component',
+         'btn btn-link',
          $formatClasses
       ])}}
    >
@@ -20,7 +20,7 @@
    <button
       type="{{$type}}"
       {{$attributes->class([
-         'button-component',
+         'btn btn-primary',
          $formatClasses
       ])}}
    >

@@ -6,7 +6,7 @@
             {{$customLabel ?? ''}}
         @endempty
     @endunless
-    <select name="{{$name}}" id="{{$id}}" {{$attributes->merge(['class' => 'select-component'])}}>
+    <select name="{{$name}}" id="{{$id}}" {{$attributes->merge(['class' => 'form-select'])}}>
         <option value="">{{$placeholder}}</option>
         @empty ($customOptions)
             @foreach ($options as $option)

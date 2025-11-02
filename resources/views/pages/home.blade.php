@@ -29,20 +29,52 @@
 @endphp
 
 @section('content')
-   <x-form method="POST" operation-type="login">
-      <x-form.input name="email" type="email" label="Email" required></x-form.input>
-      <x-form.input name="password" id="password" type="password" label="Password" required></x-form.input>
-      <x-form.input name="phone" data-numbersonly type="tel" label="Phone" required></x-form.input>
-      <x-form.input name="phone2" data-numbersonly type="tel" label="Phone 2" required></x-form.input>
-      <x-form.input name="quantity" type="number" label="Quantity" min="10" required></x-form.input>
-      <x-form.select name="language" label="Country" required :options="$countries" :model="$model"></x-form.select>
-      <x-button type="button" id="example-button" label="Inline" format="inline" onclick="Stardust.reloadAll(null, null, p => p.name === 'numbersOnly');"></x-button>
-      <x-button type="button" id="example-button" label="Block" format="block" onclick="Stardust.destroyAll()"></x-button>
-      <x-button url="https://www.google.com" id="example-button" label="Clean" format="clean"></x-button>
-      <x-form.textarea name="bio" id="bio" type="editor" label="Bio"></x-form.textarea>
-      {{-- <x-video-iframe iframe='<iframe width="490" height="871" src="https://www.youtube.com/embed/ATUYOzVX2os" title="Que le pasa a este señor? 🫣 #artificialintelligence #codificacion #ai" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>'></x-video-iframe>
-      <x-video-iframe iframe='<iframe width="560" height="315" src="https://www.youtube.com/embed/LDx5Mt87vi4?si=8eLLp9mXZlOh-Pjd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>'></x-video-iframe> --}}
-   </x-form>
+   <div class="container my-5">
+      <div class="row">
+         <div class="col-12">
+            <x-form method="POST" operation-type="login">
+               <div class="row g-4">
+                  <div class="col-6">
+                     <x-form.input name="email" type="email" label="Email" required></x-form.input>
+                  </div>
+                  <div class="col-6">
+                     <x-form.input name="password" id="password" type="password" label="Password" required></x-form.input>
+                  </div>
+                  <div class="col-6">
+                     <x-form.input name="phone" data-numbersonly type="tel" label="Phone" required></x-form.input>
+                  </div>
+                  <div class="col-6">
+                     <x-form.input name="quantity" type="number" label="Quantity" min="10" required></x-form.input>
+                  </div>
+                  <div class="col-12">
+                     <x-form.select name="language" label="Country" required :options="$countries" :model="$model"></x-form.select>
+                  </div>
+                  <div class="col-6">
+                     <x-button type="button" id="example-button" label="Button Inline"></x-button>
+                  </div>
+                  <div class="col-6">
+                     <x-button url="https://www.google.com" id="example-button" label="Link" format="block"></x-button>
+                  </div>
+                  <div class="col-12">
+                     <x-button type="button" id="example-button" label="Button Block" format="block"></x-button>
+                  </div>
+                  <div class="col-12">
+                     <x-form.textarea name="bio" id="bio" type="editor" label="Bio"></x-form.textarea>
+                  </div>
+                  <div class="col-12">
+                     <x-form.textarea name="comments" id="comments" label="Comments"></x-form.textarea>
+                  </div>
+                  <div class="col-12">
+                     <x-video-iframe iframe='<iframe width="490" height="871" src="https://www.youtube.com/embed/ATUYOzVX2os" title="Que le pasa a este señor? 🫣 #artificialintelligence #codificacion #ai" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>'></x-video-iframe>
+                  </div>
+                  <div class="col-12">
+                     <x-video-iframe iframe='<iframe width="560" height="315" src="https://www.youtube.com/embed/LDx5Mt87vi4?si=8eLLp9mXZlOh-Pjd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>'></x-video-iframe>
+                  </div>
+               </div>
+            </x-form>
+         </div>
+      </div>
+   </div>
 @endsection
 
 @push('scripts')

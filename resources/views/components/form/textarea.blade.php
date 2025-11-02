@@ -1,6 +1,6 @@
 @props(['noLabel' => false, 'label' => '', 'required' => false, 'placeholder' => '- Select -', 'cssClasses' => ''])
 
-<div @class(['textarea-component-container', $cssClasses])>
+<div @class(['form-group', $cssClasses])>
     @unless ($noLabel)
         @empty($customLabel)
             <x-label id="{{$id}}" required="{{$required}}" label="{{$label}}"></x-label>
@@ -15,7 +15,7 @@
             data-editor-html='@json($editorOptions)'
         @endif
         {{$attributes
-            ->class(['textarea-component'])
+            ->class(['form-control'])
             ->merge([
                 'rows' => 5,
                 'cols' => 30

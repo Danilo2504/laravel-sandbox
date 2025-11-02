@@ -1,4 +1,4 @@
-<div @class(['input-component-container', $cssClasses])>
+<div @class(['form-group', $cssClasses])>
     @unless ($noLabel)
         @empty($customLabel)
             <x-label id="{{$id}}" required="{{$required}}" label="{{$label}}"></x-label>
@@ -13,7 +13,7 @@
                 <input
                     type="password"
                     {{$attributes->merge([
-                        'class' => 'password-component',
+                        'class' => 'form-control',
                         'name' => $name,
                         'id' => $id,
                         'value' => $value ?? '',
@@ -22,19 +22,12 @@
                 <i class="fas fa-eye toggle-password" data-toggle="#{{$id}}"></i>
             </div>
             @break
-        @case('hidden')
-            <input
-                type="hidden"
-                {{$attributes->merge([
-                    'name' => $name,
-                    'id' => $id,
-                    'value' => $value ?? ''
-                ])}}
-            >
+        @case('custom')
+            {{$input ?? ''}}
             @break
         @default
             <input {{$attributes->merge([
-                'class'=> 'input-component',
+                'class'=> 'form-control',
                 'type' => $type,
                 'name' => $name,
                 'id' => $id,

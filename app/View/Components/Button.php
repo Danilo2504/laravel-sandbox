@@ -21,7 +21,7 @@ class Button extends Component
         $this->formatClasses = match(trim($format)) {
             'inline' => 'button-inline',
             'block' => 'button-block',
-            'clean' => 'button-clean',
+            default => 'button-inline'
         };
     }
 
