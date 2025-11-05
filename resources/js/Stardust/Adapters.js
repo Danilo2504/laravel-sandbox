@@ -211,3 +211,31 @@ export const CommonAdapter = {
       this.init(descriptor)
    }
 }
+
+export const BootboxAlertAdapter = {
+   init(descriptor) {
+      const $el = descriptor.element ? descriptor.getElement() : null;
+      const settings = {
+         size: 'small',
+         title: 'Your Title',
+      }
+      
+      const config = $.extend(true, {}, settings, descriptor.options);
+      const instance = $el?.length ? bootbox.alert($el) : bootbox.alert(config);
+
+      descriptor.markAsInitialized(instance);
+      descriptor.handlers.onInit?.($el, descriptor.options);
+   },
+   destroy(descriptor) {
+      const $el = descriptor.getElement();
+      $el.modal('hide');
+
+      descriptor.handlers.onDestroy?.($el);
+      descriptor.markAsDestroyed();
+   },
+   reload(descriptor, newContext, newOptions) {
+      this.destroy(descriptor)
+      if (newContext) descriptor.context = newContext
+      this.init(descriptor)
+   }
+}

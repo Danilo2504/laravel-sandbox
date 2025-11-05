@@ -50,13 +50,13 @@
                      <x-form.select name="language" label="Country" required :options="$countries" :model="$model"></x-form.select>
                   </div>
                   <div class="col-6">
-                     <x-button type="button" id="example-button" label="Button Inline"></x-button>
+                     <x-button type="button" id="button-inline" label="Button Inline"></x-button>
                   </div>
                   <div class="col-6">
-                     <x-button url="https://www.google.com" id="example-button" label="Link" format="block"></x-button>
+                     <x-button url="https://www.google.com" id="link-button" label="Link" format="block"></x-button>
                   </div>
                   <div class="col-12">
-                     <x-button type="button" id="example-button" label="Button Block" format="block"></x-button>
+                     <x-button type="button" id="modal-trigger" label="Button Block" format="block"></x-button>
                   </div>
                   <div class="col-12">
                      <x-form.textarea name="bio" id="bio" type="editor" label="Bio"></x-form.textarea>
@@ -75,12 +75,26 @@
          </div>
       </div>
    </div>
+   <div id="modal-loco">
+      <h1>Hola mundo</h1>
+   </div>
 @endsection
 
 @push('scripts')
    <script>
       $(function(){
-         console.log('stardust => ', window?.Stardust);
+         // console.log('stardust => ', window?.Stardust);
+         $('#modal-trigger').on('click', function(){
+            const alert = window.Stardust.register({
+               name: 'bootboxAlert',
+               element: '#modal-loco',
+               options:{
+                  message: 'aa'
+               }
+            });
+
+            window.Stardust.init(alert.id);
+         })
       });
    </script>
 @endpush
