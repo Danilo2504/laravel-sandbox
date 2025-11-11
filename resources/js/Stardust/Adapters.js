@@ -10,9 +10,9 @@ export const NumbersOnly = {
     */
    init(descriptor){
       const $el = descriptor.getElement();
-      const namespacedEvenets = $.fn.ns(
+      const namespacedEvenets = $.ns(
          this.EVENT_NAMESPACE,
-         "input keydown keyup mousedown mouseup select contextmenu drop focusout"
+         "input keydown keyup paste"
       );
 
       $el.on(namespacedEvenets, function () {
@@ -75,11 +75,11 @@ export const PasswordToggler = {
       const $inputTarget = $($el.data('toggle'));
       
 
-      const namespacedEvenetsStart = $.fn.ns(
+      const namespacedEvenetsStart = $.ns(
          this.EVENT_NAMESPACE,
          "mousedown touchstart"
       );
-      const namespacedEvenetsEnd = $.fn.ns(
+      const namespacedEvenetsEnd = $.ns(
          this.EVENT_NAMESPACE,
          "mouseup touchend"
       );

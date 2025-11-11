@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 class TailLogCommand extends Command
 {
-    protected $signature = 'log:tail {--lines=20 : Número de líneas iniciales}';
+    protected $signature = 'log:tail {--lines=100 : Número de líneas iniciales}';
     protected $description = 'Muestra en tiempo real el log más reciente de Laravel con formato de color.';
 
     public function handle()
@@ -19,17 +19,17 @@ class TailLogCommand extends Command
             ->first();
 
         if (!$latestLogFile) {
-            $this->error('No se encontró ningún archivo de log.');
+            $this->output->error('No se encontró ningún archivo de log.');
             return;
         }
 
-        $this->info("📄 Siguiendo archivo de log: {$latestLogFile}\n");
+        $this->output->info("📄 Siguiendo archivo de log: {$latestLogFile}\n");
 
         $lines = $this->option('lines');
         $process = popen("tail -n {$lines} -f " . escapeshellarg($latestLogFile), 'r');
 
         if (!$process) {
-            $this->error('No se pudo abrir el archivo de log.');
+            $this->output->error('No se pudo abrir el archivo de log.');
             return;
         }
 
@@ -51,7 +51,7 @@ class TailLogCommand extends Command
         // Detectar nivel de log y aplicar color
         if (preg_match('/\b(EMERGENCY|ALERT|CRITICAL|ERROR)\b/i', $line)) {
             $color = 'red';
-        } elseif (preg_match('/\b(WARNING|NOTICE)\b/i', $line)) {
+        } elseif (preg_match('/\b(WARNING|NOTICE|previous exception)\b/i', $line)) {
             $color = 'yellow';
         } elseif (preg_match('/\b(INFO)\b/i', $line)) {
             $color = 'blue';

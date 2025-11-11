@@ -2,3 +2,4 @@
 <script src="/assets/summernote-0.9.0/summernote-bs5.min.js"></script>
 <script src="/assets/bootbox-6.0.4/bootbox.all.min.js"></script>
 <script src="/assets/bootbox-6.0.4/bootbox.locales.min.js"></script>
+<script src="/assets/csstree-validator-3.1.0/csstree-validator.min.js"></script>

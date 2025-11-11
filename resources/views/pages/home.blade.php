@@ -64,12 +64,12 @@
                   <div class="col-12">
                      <x-form.textarea name="comments" id="comments" label="Comments"></x-form.textarea>
                   </div>
-                  <div class="col-12">
+                  {{-- <div class="col-12">
                      <x-video-iframe iframe='<iframe width="490" height="871" src="https://www.youtube.com/embed/ATUYOzVX2os" title="Que le pasa a este señor? 🫣 #artificialintelligence #codificacion #ai" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>'></x-video-iframe>
                   </div>
                   <div class="col-12">
                      <x-video-iframe iframe='<iframe width="560" height="315" src="https://www.youtube.com/embed/LDx5Mt87vi4?si=8eLLp9mXZlOh-Pjd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>'></x-video-iframe>
-                  </div>
+                  </div> --}}
                </div>
             </x-form>
          </div>

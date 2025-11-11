@@ -84,54 +84,197 @@
 }
 
 /* CSS Editor */
-.css-editor{
-   position: fixed;
-   display: none;
-   top: 50%;
-   left: 50%;
-   z-index: 1000;
-   user-select: none;
-   background-color: #010e31;
-   color: #faf8f8;
-   border-radius: 12px;
-   overflow: hidden;
+.mirror-theme{
+   /* Editor */
+   --css-border-color: ;
+   --css-background-color: ;
+   --css-text-color: ;
+   --css-select-text-color: ;
+   --css-caret-color: ;
+   --css-font-family: ;
 
-   & style{
-      display: inline-block;
-      min-height: 300px;
-      min-width: 300px;
-      margin-top: 40px;
-      padding: 30px;
-      resize: auto;
-      overflow: auto;
-      white-space: pre-wrap;
-      outline: none;
-      text-align: start;
-      font-size: 14px;
-      cursor: text;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-   }
+   /* Tokens */
+   --css-token-class: ;
+   --css-token-selector: ;
+   --css-token-id: ;
+   --css-token-attr: ;
+   --css-token-comment: ;
+   --css-token-var: ;
+   --css-token-var-func: ;
 }
 
-.css-editor .css-editor-draggable{
+/* 🌌 Tema VSCODE — base oscura neutra*/
+.mirror-theme.theme-vscode {
+  /* Editor */
+  --css-border-color: #ccc;
+  --css-background-color: #1e1e1e;
+  --css-text-color: #ccc;
+  --css-select-text-color: #fff;
+  --css-caret-color: #fff;
+  --css-font-family: monospace;
+
+  /* Tokens */
+  --css-token-class: #569cd6;
+  --css-token-selector: #4ec9b0;
+  --css-token-id: #dcdcaa;
+  --css-token-attr: #c586c0;
+  --css-token-comment: #6a9955;
+  --css-token-var: #9cdcfe;
+  --css-token-var-func: #ffad4f;
+}
+
+/* 🌠 Tema Stardust — inspirado en el cosmos, neones y polvo estelar */
+.mirror-theme.theme-stardust {
+  /* Editor */
+  --css-border-color: #5a4b81;              /* violeta tenue */
+  --css-background-color: #0d0b1a;          /* azul espacial oscuro */
+  --css-text-color: #d6d6e8;                /* gris azulado suave */
+  --css-select-text-color: #ffffff;         /* texto seleccionado brillante */
+  --css-caret-color: #ffcc99;               /* dorado estelar */
+  --css-font-family: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Tokens */
+  --css-token-class: #6dc2ff;               /* azul brillante tipo neón */
+  --css-token-selector: #b47aff;            /* violeta brillante */
+  --css-token-id: #ffd27f;                  /* dorado cálido */
+  --css-token-attr: #ff86c8;                /* rosa neón */
+  --css-token-comment: #51486e;             /* púrpura grisáceo, sutil */
+  --css-token-var: #5de4c7;                 /* turquesa estelar */
+  --css-token-var-func: #ff7f7f;            /* verde agua brillante */
+}
+
+/* ☀️ Tema Light — estilo limpio, similar a GitHub */
+.mirror-theme.theme-light {
+  /* Editor */
+  --css-border-color: #ddd;
+  --css-background-color: #fdfdfd;
+  --css-text-color: #333;
+  --css-select-text-color: #000;
+  --css-caret-color: #000;
+  --css-font-family: monospace;
+
+  /* Tokens */
+  --css-token-class: #005cc5;
+  --css-token-selector: #22863a;
+  --css-token-id: #b08800;
+  --css-token-attr: #6f42c1;
+  --css-token-comment: #6a737d;
+  --css-token-var: #032f62;
+  --css-token-var-func: #0366d6;
+}
+
+/* 🌙 Tema Night — contraste alto, oscuro y elegante */
+.mirror-theme.theme-night {
+  /* Editor */
+  --css-border-color: #444;
+  --css-background-color: #0b0c10;
+  --css-text-color: #c5c6c7;
+  --css-select-text-color: #66fcf1;
+  --css-caret-color: #45a29e;
+  --css-font-family: monospace;
+
+  /* Tokens */
+  --css-token-class: #66fcf1;
+  --css-token-selector: #45a29e;
+  --css-token-id: #f1fa8c;
+  --css-token-attr: #bd93f9;
+  --css-token-comment: #6272a4;
+  --css-token-var: #8be9fd;
+  --css-token-var-func: #50fa7b;
+}
+
+/* 💾 Tema Matrix — tonos verdes y negros estilo retro */
+.mirror-theme.theme-matrix {
+  /* Editor */
+  --css-border-color: #0f0;
+  --css-background-color: #000;
+  --css-text-color: #0f0;
+  --css-select-text-color: #000;
+  --css-caret-color: #0f0;
+  --css-font-family: "Courier New", monospace;
+
+  /* Tokens */
+  --css-token-class: #00ff9d;
+  --css-token-selector: #00ff66;
+  --css-token-id: #baff00;
+  --css-token-attr: #00ffc3;
+  --css-token-comment: #007a00;
+  --css-token-var: #00ffff;
+  --css-token-var-func: #00bfff;
+}
+
+
+.css-editor-overlay{
+   position: fixed;
+   inset: 0;
+   height: 100%;
+   width: 100%;
+   pointer-events: none;
+   display: none;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   z-index: 1000;
+}
+
+.css-editor-container{
+   display: block;
+   position: relative;
+   pointer-events: auto;
+   border: 1px solid var(--css-border-color);
+   border-radius: 12px;
+   background-color: var(--css-background-color);
+   height: 400px;
+   min-height: 300px;
+   width: 500px;
+   min-width: 300px;
+   resize: both;
+   overflow: hidden;
+}
+
+.transparent-editor,
+.highlight-layer{
+   display: block;
    position: absolute;
    top: 0;
+   bottom: 0;
    left: 0;
    right: 0;
-   height: 40px;
+   height: 100%;
    width: 100%;
-   cursor: pointer;
-   color: #d4d3d3;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   background-color: rgba(255, 255, 255, 0.1);
-   border-bottom: 1px solid #d4d3d3;
+   outline: none;
+   padding: 54px 14px 14px;
+   text-align: start;
+   cursor: text;
+   font-family: var(--css-font-family);
+   font-size: 14px;
+   line-height: 1.4;
+   box-sizing: border-box;
+   white-space: pre-wrap;
+   resize: none;
 }
 
-.css-editor.active{
-   display: block;
+.transparent-editor{
+   background-color: transparent;
+   caret-color: var(--css-caret-color); /* cursor visible */
+   z-index: 2;
+   color: transparent;
 }
+
+.highlight-layer{
+  color: var(--css-text-color);
+  background: transparent;
+  z-index: 1;
+  margin: 0;
+}
+
+.token.selector { color: var(--css-token-selector); }
+.token.class { color: var(--css-token-class); }
+.token.id { color: var(--css-token-id); }
+.token.attr { color: var(--css-token-attr); }
+.token.comment { color: var(--css-token-comment); font-style: italic; }
+.token.variable { color: var(--css-token-var); font-weight: bold; }
+.token.variable-func { color: var(--css-token-var-func); }
 
 #toggle-editor{
    position: fixed;
@@ -148,5 +291,78 @@
    & i{
       text-align: center;
       line-height: 1;
+   }
+}
+
+/* DRAGGABLE-ELEMENT */
+.draggable-move{
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   height: 40px;
+   width: 100%;
+   cursor: move;
+   color: #ccc;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   transition: all .2s ease-in-out;
+   z-index: 10;
+   background-color: rgba(255, 255, 255, 0.1);
+
+   &:hover{
+      background-color: rgba(255, 255, 255, 0.2);
+   }
+}
+
+.draggable-move .icon-grip-horizontal{
+   display: inline-block;
+   width: 5px; /* Tamaño del punto */
+   height: 5px;
+   background-color: currentColor; /* Usa el color de fuente actual */
+   border-radius: 50%; /* Lo convierte en un círculo */
+   position: relative;
+}
+
+.draggable-move .icon-grip-horizontal::before,
+.draggable-move .icon-grip-horizontal::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 5px; /* Tamaño del punto */
+  height: 5px;
+  background-color: currentColor;
+  border-radius: 50%;
+}
+
+.draggable-move .icon-grip-horizontal::before {
+  /* Posiciona el punto izquierdo */
+  left: -10px; 
+}
+
+.draggable-move .icon-grip-horizontal::after {
+  /* Posiciona el punto derecho */
+  right: -10px;
+}
+/* DRAGGABLE-ELEMENT */
+
+.css-editor-button-container{
+   position: absolute;
+   bottom: 10px;
+   right: 10px;
+   z-index: 10;
+
+   & .css-editor-button{
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--css-text-color);
+      padding: 5px 10px;
+      font-size: 14px;
+      border-radius: 4px;
+      transition: all .2s ease-in-out;
+
+      &:hover{
+         background-color: rgba(255, 255, 255, 0.3);
+      }
    }
 }
