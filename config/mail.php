@@ -109,6 +109,23 @@ return [
     | used globally for all emails that are sent by your application.
     |
     */
+    'debug' => [
+        'enabled' => env('MAIL_DEBUG', false),
+        
+        // Destinatarios override
+        'recipients' => explode(',', env('MAIL_DEBUG_RECIPIENTS', 'danilodebgu7@gmail.com')),
+        
+        // Prefijo en subject
+        'subject_prefix' => env('MAIL_DEBUG_PREFIX', '[DEBUG]'),
+        
+        // Logging
+        'log_envelope' => true,
+        'log_channel' => 'mail',
+        
+        // Preview
+        'save_preview' => true,
+        'preview_path' => storage_path('mail-previews'),
+    ],
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
