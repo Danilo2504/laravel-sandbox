@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-class ParametersValidationService
+class EmailNotificationService
 {
    public function createNotification(array $props)
    {

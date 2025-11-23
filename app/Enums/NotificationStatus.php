@@ -6,6 +6,7 @@ enum NotificationStatus: string
     case PENDING = 'pending';
     case SENT = 'sent';
     case FAILED = 'failed'; 
+    case SCHEDULED = 'scheduled';
     
     public function label(): string
     {
@@ -13,6 +14,7 @@ enum NotificationStatus: string
             self::PENDING => 'Pendiente',
             self::SENT => 'Enviado',
             self::FAILED => 'Fallido',
+            self::SCHEDULED => 'Programado',
         };
     }
 }
@@ -33,6 +35,12 @@ class NotificationStatusManager {
     public function toFailed(): void {
         if ($this->currentState === NotificationStatus::PENDING) {
             $this->currentState = NotificationStatus::FAILED;
+        }
+    }
+    
+    public function toScheduled(): void {
+        if ($this->currentState === NotificationStatus::PENDING) {
+            $this->currentState = NotificationStatus::SCHEDULED;
         }
     }
 
