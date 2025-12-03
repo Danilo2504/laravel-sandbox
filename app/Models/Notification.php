@@ -365,7 +365,7 @@ class Notification extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function notifiable()
+    public function notificable()
     {
         return $this->morphTo();
     }

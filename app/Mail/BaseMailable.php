@@ -10,8 +10,6 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -23,7 +21,9 @@ use Illuminate\Support\Facades\Log;
 class BaseMailable extends Mailable
 {
     use Queueable, SerializesModels;
-
+    protected $blocks = [];
+    protected $content = [];
+    protected $options = [];
     /**
      * Create a new message instance.
      *
@@ -40,18 +40,18 @@ class BaseMailable extends Mailable
      * @param array $metadata Additional email metadata.
      */
     public function __construct(
-        protected string|array $to,
-        protected string $subject,
-        protected array $blocks = [],
-        protected ?string $content = null,
-        protected string|array $cc = [],
-        protected string|array $bcc = [],
-        protected ?string $replyTo = null,
-        protected ?string $from = null,
-        protected ?string $fromName = null,
-        protected ?string $templateName = null,
-        protected array $metadata = []
+        string|array $to,
+        array $blocks = [],
+        ?string $content = null,
+        array $options = [],
+        ?array $attachments = [],
     ) {
+        $this->blocks = $blocks;
+        $this->content = $content;
+        $this->options = array_merge($options, [
+            'to' => $to,
+        ]);
+        $this->attachments = $attachments;
     }
 
     /**
@@ -63,15 +63,24 @@ class BaseMailable extends Mailable
      */
     public function envelope(): Envelope
     {
-        $envelopeOptions = $this->getEnvelopeOptions();
+        Log::channel('mail_logger')->info('Email redirected in debug mode', [
+            'mailable' => static::class,
+            'recipients' => $this->extractEmailFromAddress('to'),
+            'original_recipients' => $this->getOption('original_to'),
+            'is_debug' => $this->isDebugMode(),
+            'subject' => $this->options['subject'],
+            'original_subject' => $this->getOption('original_subject'),
+            'metadata' => $this->options['metadata'] ?? [],
+        ]);
+
         return new Envelope(
-            from: $envelopeOptions['from'],
-            replyTo: $envelopeOptions['replyTo'],
-            to: $envelopeOptions['to'],
-            cc: $envelopeOptions['cc'],
-            bcc: $envelopeOptions['bcc'],
-            subject: $envelopeOptions['subject'],
-            metadata: $envelopeOptions['metadata'],
+            from: $this->getFrom(),
+            replyTo: $this->getReplyTo(),
+            to: $this->getRecipients(),
+            cc: $this->getAddresses($this->cc),
+            bcc: $this->getAddresses($this->bcc),
+            subject: $this->getSubject(),
+            metadata: $this->metadata,
         );
     }
 
@@ -97,11 +106,11 @@ class BaseMailable extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return $this->attachments;
     }
     
     // === Helpers ===
-    
+
     /**
      * Get the template data to be passed to the view.
      *
@@ -113,45 +122,49 @@ class BaseMailable extends Mailable
             'subject' => $this->getSubject(),
             'blocks' => $this->blocks,
             'content' => $this->content,
-            'metadata' => $this->metadata,
+            'metadata' => $this->options['metadata'] ?? [],
         ];
     }
 
     protected function getTemplateName(): string
     {
-        return $this->templateName ?? 'default';
+        return $this->options['templateName'] ?? 'default';
     }
-    
+
     /**
-     * Get the envelope options for the message.
+     * Get the mailable options for the message.
      * 
      * Can return all options or a specific option by key.
      *
      * @param string|null $option Specific option key to retrieve.
      * @return mixed Array with all options or the value of a specific option.
      */
-    protected function getEnvelopeOptions(?string $option = null): mixed
+    public function getOption(?string $option = null): mixed
     {
         $options = [
             'from' => $this->getFrom(),
-            'replyTo' => $this->replyTo ? [new Address($this->replyTo)] : [],
+            'replyTo' => $this->getReplyTo(),
             'to' => $this->getRecipients(),
-            'cc' => $this->getAddresses($this->cc),
-            'bcc' => $this->getAddresses($this->bcc),
+            'original_to' => $this->normalizeEmails($this->options['to'] ?? []),
+            'cc' => $this->getAddresses($this->options['cc'] ?? []),
+            'bcc' => $this->getAddresses($this->options['bcc'] ?? []),
             'subject' => $this->getSubject(),
-            'metadata' => $this->metadata,
+            'original_subject' => $this->options['subject'] ?? '',
+            'metadata' => $this->options['metadata'] ?? [],
             'template_name' => $this->getTemplateName(),
             'template_data' => $this->getTemplateData(),
             'is_debug' => $this->isDebugMode(),
         ];
 
-        if($option && Arr::get($options, $option)){
+        if ($option && Arr::has($options, $option)) {
             return Arr::get($options, $option);
+        } elseif ($option) {
+            return null;
         }
 
         return $options;
     }
-    
+
     /**
      * Normalize email addresses to a consistent array format.
      * 
@@ -169,18 +182,18 @@ class BaseMailable extends Mailable
         if (empty($emails)) {
             return [];
         }
-        
+
         if (is_string($emails)) {
             return array_filter(array_map('trim', explode(',', $emails)));
         }
-        
+
         if (is_array($emails)) {
             return array_filter($emails);
         }
-        
+
         return [$emails];
     }
-    
+
     /**
      * Convert normalized emails into Laravel Address objects.
      *
@@ -194,7 +207,12 @@ class BaseMailable extends Mailable
             $this->normalizeEmails($emails)
         );
     }
-    
+
+    protected function getReplyTo()
+    {
+        return $this->getAddresses(Arr::get($this->options, 'replyTo'));
+    }
+
     /**
      * Get the sender address and name.
      * 
@@ -205,11 +223,11 @@ class BaseMailable extends Mailable
     protected function getFrom(): Address
     {
         return new Address(
-            $this->from ?? config('mail.from.address'),
-            $this->fromName ?? config('mail.from.name')
+            $this->options['from'] ?? config('mail.from.address'),
+            $this->options['fromName'] ?? config('mail.from.name')
         );
     }
-    
+
     /**
      * Get the message recipients.
      * 
@@ -219,15 +237,15 @@ class BaseMailable extends Mailable
      */
     protected function getRecipients(): array
     {
-        $recipients = $this->normalizeEmails($this->to);
-        
+        $recipients = $this->normalizeEmails($this->options['to'] ?? []);
+
         if ($this->isDebugMode()) {
-            return $this->getDebugRecipients($recipients);
+            return $this->getDebugRecipients();
         }
-        
+
         return $this->getAddresses($recipients);
     }
-    
+
     /**
      * Get the message subject.
      * 
@@ -238,13 +256,13 @@ class BaseMailable extends Mailable
     protected function getSubject(): string
     {
         if (!$this->isDebugMode()) {
-            return $this->subject;
+            return $this->options['subject'];
         }
-        
+
         $prefix = config('mail.debug.subject_prefix', '[DEBUG]');
-        return "{$prefix} {$this->subject}";
+        return "{$prefix} {$this->options['subject']}";
     }
-    
+
     /**
      * Determine if the system is in debug mode for emails.
      *
@@ -254,7 +272,7 @@ class BaseMailable extends Mailable
     {
         return config('mail.debug.enabled', false);
     }
-    
+
     /**
      * Get debug recipients instead of the real recipients.
      * 
@@ -263,65 +281,34 @@ class BaseMailable extends Mailable
      * @param array $original Array with original email addresses.
      * @return array Array of Address objects with debug addresses.
      */
-    protected function getDebugRecipients(array $original): array
+    protected function getDebugRecipients(): array
     {
         $debugEmails = config('mail.debug.recipients', []);
-        
-        if (config('mail.debug.log_envelope', true)) {
-            Log::channel(config('mail.debug.log_channel', 'mail'))->info('Email redirected in debug mode', [
-                'mailable' => static::class,
-                'original_to' => $original,
-                'debug_to' => $debugEmails,
-                'subject' => $this->subject,
-                'metadata' => $this->metadata,
-            ]);
-        }
-        
+
         return $this->getAddresses($debugEmails);
     }
-    
-    /**
-     * Build the message.
-     * 
-     * In debug mode with preview enabled, saves an HTML copy of the email.
-     *
-     * @return static
-     */
-    public function build()
+
+    public function extractEmailFromAddress(mixed $address): string|array|null
     {
-        if ($this->isDebugMode() && config('mail.debug.save_preview', false)) {
-            $this->savePreview();
+        if ($address instanceof Address) {
+            return $address->address;
         }
-        
-        return parent::build();
-    }
-    
-    /**
-     * Save an HTML preview of the email.
-     * 
-     * Useful for development and debugging. Files are saved with a name
-     * based on the subject and timestamp.
-     *
-     * @return void
-     */
-    protected function savePreview(): void
-    {
-        try {
-            $path = config('mail.debug.preview_path', storage_path('mail-previews'));
-            $filename = Str::slug($this->subject) . '-' . now()->format('Ymd-His') . '.html';
-            
-            File::ensureDirectoryExists($path);
-            File::put("{$path}/{$filename}", $this->render());
-            
-            Log::channel('mail')->info('Email preview saved', [
-                'path' => "{$path}/{$filename}",
-                'subject' => $this->subject,
-            ]);
-        } catch (\Exception $e) {
-            Log::warning('Failed to save email preview', [
-                'error' => $e->getMessage(),
-                'subject' => $this->subject,
-            ]);
+
+        if (is_array($address)) {
+            return array_map(fn($addr) => $this->extractEmailFromAddress($addr), $address);
         }
+
+        if (is_string($address)) {
+            $options = $this->getOption();
+            if (isset($options[$address])) {
+                return $this->extractEmailFromAddress($options[$address]);
+            }
+        }
+
+        if ($address instanceof \Illuminate\Support\Collection) {
+            return $address->map(fn($addr) => $this->extractEmailFromAddress($addr))->toArray();
+        }
+
+        return null;
     }
 }

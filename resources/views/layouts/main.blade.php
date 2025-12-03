@@ -8,8 +8,6 @@
       <main class="page-container">
          @yield('content')
       </main>
-
-      <x-css-editor></x-css-editor>
    </body>
 
    @include('base.footer')

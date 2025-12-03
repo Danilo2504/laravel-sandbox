@@ -19,7 +19,123 @@
     </noscript>
     <![endif]-->
     <style type="text/css">
-        {!! file_get_contents(public_path('css/mail.css')) !!}
+        /* Reset Styles */
+        body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        }
+
+        table {
+        border-collapse: collapse !important;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        }
+
+        img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        -ms-interpolation-mode: bicubic;
+        }
+
+        a {
+        color: #3490dc;
+        text-decoration: none;
+        }
+
+        /* Responsive Styles */
+        @media only screen and (max-width: 600px) {
+        .email-container {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        .email-header h1 {
+            font-size: 24px !important;
+        }
+        
+        .block-title h2 {
+            font-size: 20px !important;
+        }
+        
+        .block-text p {
+            font-size: 14px !important;
+        }
+        
+        .block-button a {
+            width: 100% !important;
+            display: block !important;
+            box-sizing: border-box;
+        }
+        
+        td[style*="padding: 40px 30px"] {
+            padding: 20px 15px !important;
+        }
+        
+        .email-header {
+            padding: 20px 15px !important;
+        }
+        
+        .email-footer {
+            padding: 20px 15px !important;
+        }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #1a202c !important;
+        }
+        
+        .email-container {
+            background-color: #2d3748 !important;
+        }
+        
+        .block-title h2 {
+            color: #f7fafc !important;
+        }
+        
+        .block-text p {
+            color: #e2e8f0 !important;
+        }
+        
+        .email-footer {
+            background-color: #1a202c !important;
+            border-top-color: #4a5568 !important;
+        }
+        }
+
+        /* Outlook-Specific Styles */
+        .ExternalClass {
+        width: 100%;
+        }
+
+        .ExternalClass,
+        .ExternalClass p,
+        .ExternalClass span,
+        .ExternalClass font,
+        .ExternalClass td,
+        .ExternalClass div {
+        line-height: 100%;
+        }
+
+        /* Additional Utility Classes */
+        .text-center {
+        text-align: center !important;
+        }
+
+        .text-left {
+        text-align: left !important;
+        }
+
+        .text-right {
+        text-align: right !important;
+        }
     </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f4f4f7;">

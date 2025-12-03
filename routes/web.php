@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,10 @@ Route::get('/', function () {
 
 Route::controller(NotificationsController::class)->group(function () {
     Route::post('/notification/send', 'notificationSend')->name('notification.send');
+});
+
+Route::controller(UserController::class)->group(function () {
+    Route::get('/users/insert-fake', 'insertFakeUsers')->name('users.insertFake');
 });
 
 if (app()->environment('local')) {

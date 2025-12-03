@@ -113,18 +113,10 @@ return [
         'enabled' => env('MAIL_DEBUG', false),
         
         // Destinatarios override
-        'recipients' => explode(',', env('MAIL_DEBUG_RECIPIENTS', 'danilodebgu7@gmail.com')),
+        'recipients' => explode(',', env('MAIL_DEBUG_RECIPIENTS', 'danilodebug7@gmail.com')),
         
         // Prefijo en subject
         'subject_prefix' => env('MAIL_DEBUG_PREFIX', '[DEBUG]'),
-        
-        // Logging
-        'log_envelope' => true,
-        'log_channel' => 'mail',
-        
-        // Preview
-        'save_preview' => true,
-        'preview_path' => storage_path('mail-previews'),
     ],
 
     'from' => [
